@@ -1,0 +1,64 @@
+﻿using UnityEngine;
+using Unity.Netcode;
+
+public class Projectile : NetworkBehaviour
+{
+    public float speed = 10f;
+    public float lifeTime = 5f;
+    public int damage = 5;
+
+    private float timer;
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false; // ????????? ???????? ???
+        }
+    }
+
+    public void Fire(Vector3 direction)
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = direction * speed; // ???????????? ?????????
+            timer = 0f; // ???????? ?????? ?????
+        }
+    }
+
+    void Update()
+    {
+        if (!IsServer) return; // ?????????? ???? ?? ???????
+
+        timer += Time.deltaTime;
+        if (timer > lifeTime)
+        {
+            if (NetworkObject.IsSpawned)
+                NetworkObject.Despawn();
+            else
+                gameObject.SetActive(false);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!IsServer) return; // ?????? ???? ?? ???????
+
+        if (other.CompareTag("Player"))
+        {
+            PlayerHealth ph = other.GetComponent<PlayerHealth>();
+            if (ph != null)
+            {
+                ph.TakeDamage(damage); // ??????? ????? ??????
+            }
+        }
+
+        // ????????? ??????? ????? ?????????
+        if (NetworkObject.IsSpawned)
+            NetworkObject.Despawn();
+        else
+            gameObject.SetActive(false);
+    }
+}
