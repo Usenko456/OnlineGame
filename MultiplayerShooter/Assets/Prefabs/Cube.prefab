@@ -213,7 +213,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  detectionRadius: 6
+  detectionRadius: 16
   fireRate: 2
-  projectilePrefab: {fileID: 3614573491420017525, guid: a1d75545d89f38946b91977f104db803, type: 3}
   firePoint: {fileID: 8022373184850181743}

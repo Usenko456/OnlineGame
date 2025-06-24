@@ -22,7 +22,6 @@ public class PlayerHealth : NetworkBehaviour
         if (!IsServer) return; // Damage is processed only on the server
 
         health.Value -= damage; // Decrease health
-        Debug.Log("HP=" + health.Value);
 
         if (health.Value <= 0)
         {
